@@ -38,7 +38,7 @@ public static void mergeSort(int a[], int low, int mid, int high){
 		int size = (high-low)+1;
 		int newArr[] = new int[size];
 		
-		//Initialize variables LHS RHS for both points of the two arrays to be merged
+		//Initialize variables LHS RHS as index pointers for the two arrays to be merged
 		int LHS=low;
 		int RHS=mid+1;
 		
