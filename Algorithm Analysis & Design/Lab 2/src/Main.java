@@ -8,9 +8,10 @@ public class Main {
 		//bucketSort(x);
 		//radixSort(x);
 		//countingSort(randomArray(100000));
-		selectionSort(randomArray(100000));
-		insertionSort(randomArray(100000));
+		//selectionSort(randomArray(100000));
+		//insertionSort(randomArray(100000));
 		bubbleSort(randomArray(100000));
+		shellSort(randomArray(100000));
 		//System.out.println(Arrays.toString(x));
 	}
 	
@@ -94,9 +95,33 @@ public class Main {
 		System.out.println("[Bucket Sort] Time elapsed: "+ (System.nanoTime()-currentTime)/Math.pow(10, 9)+"	second(s).");
 	}
 	
-	//Question 4 - Shell Sort
 	public static void shellSort(int array[]){
 		
+		double currentTime = System.nanoTime();
+		
+		//Define gap size
+		int gap = array.length/2;
+		
+		//For every loop, decrease gap size by a factor of 2 until 1
+		for(;gap>0;gap/=2){	
+			//System.out.println("Gap size: " + gap);
+			//Do insertion sort based on the gap
+			for(int i=0;i<array.length;i++){
+				int j=i+gap;
+				//System.out.println("i: " + Arrays.toString(array));
+				while(j>0 && j<array.length && (j-gap)>=0){
+					if(array[j-gap]>array[j]){
+						int temp = array[j];
+						array[j]=array[j-gap];
+						array[j-gap]=temp;
+						//System.out.println("SWAP " + (j-gap) + " " + j);
+					}
+					
+					j-=gap;
+				}
+			}
+		}
+		System.out.println("[Insertion Sort]	Time elapsed: "+ (System.nanoTime()-currentTime)/Math.pow(10, 9)+"	second(s).");
 	}
 
 	//Insertion Sort
