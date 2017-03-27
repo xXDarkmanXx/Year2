@@ -6,6 +6,7 @@ public class Main {
 	static int []cache = new int [300000];
 	
 	public static void main(String args[]) throws IOException{
+		
 		//PART A
 		//Initialization for Fibonacci's (DP)
 		cache[0]=0;		cache[1]=1;

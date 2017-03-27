@@ -3,16 +3,22 @@ import java.util.*;
 public class Main {
 	
 	public static void main(String args[]){
-		//int x [] = randomArray(1000);
-		//System.out.println(Arrays.toString(x));
-		//bucketSort(x);
-		//radixSort(x);
+		int x [] = randomArray(15);
+		//double currentTime = System.nanoTime();
+		//mergeSort(x,0,x.length-1);
+		//Arrays.sort(x);
+		//System.out.println("[Merge Sort]	Time elapsed: "+ (System.nanoTime()-currentTime)/Math.pow(10, 9)+"	second(s).");
+		
+		//bucketSort(randomArray(100000));
+		//bucketSort2(randomArray(100000));
+		//radixSort(randomArray(100000));
 		//countingSort(randomArray(100000));
 		//selectionSort(randomArray(100000));
 		//insertionSort(randomArray(100000));
-		bubbleSort(randomArray(100000));
-		shellSort(randomArray(100000));
-		//System.out.println(Arrays.toString(x));
+		System.out.println("Non-sorted array: " + Arrays.toString(x));
+		bubbleSort(x);
+		//shellSort(randomArray(100000));
+		System.out.println("Sorted array (Bubble Sort): " + Arrays.toString(x));
 	}
 	
 	//Random Array Generator
@@ -25,7 +31,7 @@ public class Main {
 	
 	//Question 1 - Bubble Sort
 	public static void bubbleSort(int array[]){
-		double currentTime = System.nanoTime();
+		//double currentTime = System.nanoTime();
 		int temp=0;
 		for(int i=0;i<array.length-1;i++){
 			for(int j=0;j<array.length-1-i;j++){
@@ -36,7 +42,7 @@ public class Main {
 				}
 			}
 		}
-		System.out.println("[Bubble Sort]		Time elapsed: "+ (System.nanoTime()-currentTime)/Math.pow(10, 9)+"	second(s).");
+		//System.out.println("[Bubble Sort]		Time elapsed: "+ (System.nanoTime()-currentTime)/Math.pow(10, 9)+"	second(s).");
 	}
 	
 	//Question 2 - Counting Sort
@@ -81,9 +87,7 @@ public class Main {
 		ArrayList<ArrayList> a = new ArrayList();
 		for(int i=0;i<10;i++)	a.add(new ArrayList<Double>());
 		
-		for(int i=0;i<newArr.length;i++){
-			a.get((int)newArr[i]*10).add(newArr[i]);
-		}
+		for(int i=0;i<newArr.length;i++)	a.get((int)newArr[i]*10).add(newArr[i]);
 		
 		for(int i=0;i<10;i++)	Collections.sort(a.get(i));
 		int c=0;
@@ -95,6 +99,7 @@ public class Main {
 		System.out.println("[Bucket Sort] Time elapsed: "+ (System.nanoTime()-currentTime)/Math.pow(10, 9)+"	second(s).");
 	}
 	
+	//Question 4 - Shell Sort 
 	public static void shellSort(int array[]){
 		
 		double currentTime = System.nanoTime();
@@ -185,4 +190,96 @@ public class Main {
 			
 			for(int i=0;i<array.length;i++)	array[i]=newArr[i];
 		}
+	
+	public static void bucketSort2 (int [] a){
+		double currentTime = System.nanoTime();
+		//Declaring buckets
+	    ArrayList<PriorityQueue<Integer>> lists = new ArrayList<PriorityQueue<Integer>>();
+
+	    //Initializing buckets
+	    for(int i=0; i <10;i++)	lists.add(new PriorityQueue<Integer>());
+
+	    //Find maximum
+	    int max =0 ;
+	    for (int i=0;i<a.length;i++)	max = Math.max(max,a[i]);
+
+	    //Dividing constant
+	    int divider = (int)(Math.ceil((max+1)/10.0));				//No need Math.ceil, +0.5 will do
+	    for(int i=0;i<a.length;i++)	lists.get(a[i]/divider).add(a[i]);
+	        
+	    //Returning sort values back to the array 
+	    int bucketSize, count=0;
+	    for(int i=0;i<lists.size();i++){
+	    	bucketSize = lists.get(i).size();
+	    	for(int j=0;j<bucketSize;j++){
+	        	a[count++]=lists.get(i).poll();
+	       	}
+	    }
+	    System.out.println("[Bucket Sort2]	Time elapsed: "+ (System.nanoTime()-currentTime)/Math.pow(10, 9)+"	second(s).");
+	} 
+
+	//Merge Sort
+	public static void mergeSort(int a[], int low, int high){
+		if(low<high){
+			int mid = (low+high)/2;
+			//Split into left
+			mergeSort(a,low,mid);
+			//Split into right
+			mergeSort(a,mid+1,high);
+			//Merge the arrays together
+			mergeSort(a,low,mid,high);
+		}
+	}
+	private static void mergeSort(int a[], int low, int mid, int high){
+		
+		//Initialize a temporary array of size the sum of the two arrays to be merged
+		//Left[low...mid]	Right[mid+1...high]
+		int size = (high-low)+1;
+		int newArr[] = new int[size];
+		
+		//Initialize variables LHS RHS for both points of the two arrays to be merged
+		int LHS=low;
+		int RHS=mid+1;
+		
+		//Initialize variable i as the index for the values to be inserted into the temporary array
+		int i=0;
+		
+		//By comparing the values from the two arrays, (merge) copy them into the temporary array (sorted)
+		while(i<=high){
+			
+			if(a[LHS]<a[RHS]){
+				newArr[i]=a[LHS];
+				LHS++;
+			}else if(a[LHS]>a[RHS]){
+				newArr[i]=a[RHS];
+				RHS++;
+			}else{
+				newArr[i]=a[LHS];
+				LHS++;
+			}
+			i++;
+			//If any of the two arrays are being fully copied into the temporary array
+			//Exit from the while loop as no more comparison need to be done further
+			if(LHS>mid || RHS>high)
+				break;
+		}
+		
+		//(Merge) Copy the remaining values into the temporary array (sorted)
+		for(;i<=high;i++){
+			if(LHS>=mid && RHS<=high){
+				newArr[i]=a[RHS];
+				RHS++;
+			}
+			else if(RHS>=high && LHS<=mid){
+				newArr[i]=a[LHS];
+				LHS++;
+			}
+		}
+		
+		//Replace the original array's values with the sorted array's values
+		int newArrL=0;
+		for(int j=low;j<=high;j++,newArrL++){
+			a[j]=newArr[newArrL];
+		}
+	}
 }
